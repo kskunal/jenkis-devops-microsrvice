@@ -1,12 +1,5 @@
 //SCRIPTED
 
-<<<<<<< HEAD
-    stages{
-        stage('checkout'){
-            steps{
-                sh 'mvn --version'
-
-=======
 //DECLARATIVE
 pipeline {
 	agent any
@@ -23,7 +16,6 @@ pipeline {
 			steps {
 				sh 'mvn --version'
 				sh 'docker version'
->>>>>>> 5ab55ebd324ff59728d89ee65a37f11fd66919be
 				echo "Build"
 				echo "PATH - $PATH"
 				echo "BUILD_NUMBER - $env.BUILD_NUMBER"
