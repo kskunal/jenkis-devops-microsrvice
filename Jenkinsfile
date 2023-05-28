@@ -51,7 +51,6 @@ pipeline {
 
 		stage('Build Docker Image') {
 			steps {
-				//"docker build -t ksauto/currency-exchange-devops:$env.BUILD_TAG"
 				script {
 					dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
 				}
