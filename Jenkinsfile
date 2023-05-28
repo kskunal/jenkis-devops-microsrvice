@@ -55,10 +55,9 @@ pipeline {
 						// withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 						// def dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
 						"docker build -t ksauto82/currency-exchange-devops:$env.BUILD_TAG ."
-            		}
-				}
+					}
 
-			}
+				}
 		}
 
 		stage('Push Docker Image') {
