@@ -52,28 +52,29 @@ pipeline {
 		stage('Build Docker Image') {
 			steps {
 				script {
-						withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-						def dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
+						// withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+						// def dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
+						docker build -t in28min/currency-exchange-devops:$env.BUILD_TAG
             		}
 				}
 
 			}
 		}
 
-		stage('Push Docker Image') {
-			steps {
-				script {
+	// 	stage('Push Docker Image') {
+	// 		steps {
+	// 			script {
 
-					withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-						docker.withRegistry('', 'dockerhub') {
-							dockerImage.push()
-							dockerImage.push('latest')
-                		}
-            		}
-				}
-			}
-		}
-	} 
+	// 				withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+	// 					docker.withRegistry('', 'dockerhub') {
+	// 						dockerImage.push()
+	// 						dockerImage.push('latest')
+    //             		}
+    //         		}
+	// 			}
+	// 		}
+	// 	}
+	// } 
 	
 	post {
 		always {
