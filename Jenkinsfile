@@ -52,7 +52,9 @@ pipeline {
 		stage('Build Docker Image') {
 			steps {
 				script {
-					dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
+						withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+						def dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
+            		}
 				}
 
 			}
@@ -61,10 +63,13 @@ pipeline {
 		stage('Push Docker Image') {
 			steps {
 				script {
-					docker.withRegistry('', 'dockerhub') {
-						dockerImage.push();
-						dockerImage.push('latest');
-					}
+
+					withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+						docker.withRegistry('', 'dockerhub') {
+							dockerImage.push()
+							dockerImage.push('latest')
+                		}
+            		}
 				}
 			}
 		}
