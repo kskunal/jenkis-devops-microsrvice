@@ -1,16 +1,29 @@
-pipeline{
-    agent any
-    environment {
-        dockerHome = tool 'myDocker'
-        mavenHome = tool 'myMaven'
-        PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
-    }
+//SCRIPTED
 
+<<<<<<< HEAD
     stages{
         stage('checkout'){
             steps{
                 sh 'mvn --version'
 
+=======
+//DECLARATIVE
+pipeline {
+	agent any
+	// agent { docker { image 'maven:3.6.3'} }
+	// agent { docker { image 'node:13.8'} }
+	environment {
+		dockerHome = tool 'myDocker'
+		mavenHome = tool 'myMaven'
+		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+	}
+
+	stages {
+		stage('Checkout') {
+			steps {
+				sh 'mvn --version'
+				sh 'docker version'
+>>>>>>> 5ab55ebd324ff59728d89ee65a37f11fd66919be
 				echo "Build"
 				echo "PATH - $PATH"
 				echo "BUILD_NUMBER - $env.BUILD_NUMBER"
@@ -18,55 +31,63 @@ pipeline{
 				echo "JOB_NAME - $env.JOB_NAME"
 				echo "BUILD_TAG - $env.BUILD_TAG"
 				echo "BUILD_URL - $env.BUILD_URL"
-            }
-        }
-        stage('Compile'){
-            steps{
-                sh "mvn clean compile"
-            }
-        }
-        stage('Test'){
-            steps{
-                sh "mvn test"
-            }
-        }
-        stage('Integreating Test'){
-            steps{
-                sh "mvn failsafe:integration-test failsafe:verify"
-            }
-        }
-        stage('Package'){
-            steps{
-                sh "mvn package -DskipTests"
-            }
-        }
-        stage('Build Docker Image'){
-            steps{
-                script{
-                    dockerImage = docker.build("ksauto82/currency-exchange-devops:${env.BUILD_TAG}")
-                }
-            }
-        }
-        stage('Push Docker Image'){
-            steps{
+			}
+		}
+		stage('Compile') {
+			steps {
+				sh "mvn clean compile"
+			}
+		}
 
-                script{
-                        docker.withRegistry('','DockerHubID'){
-                        dockerImage.push('latest')
-                        }
-                }
-            }
-        }
-    }
-    post{
-        always {
-            echo 'Im awesome. I run always'
-        }
-        success {
-            echo 'I run when you are sucessful'
-        }
-        failure {
-            echo 'I run when you fail'
-        }
-    }
+		stage('Test') {
+			steps {
+				sh "mvn test"
+			}
+		}
+
+		stage('Integration Test') {
+			steps {
+				sh "mvn failsafe:integration-test failsafe:verify"
+			}
+		}
+
+		stage('Package') {
+			steps {
+				sh "mvn package -DskipTests"
+			}
+		}
+
+		stage('Build Docker Image') {
+			steps {
+				//"docker build -t ksauto/currency-exchange-devops:$env.BUILD_TAG"
+				script {
+					dockerImage = docker.build("ksauto/currency-exchange-devops:${env.BUILD_TAG}")
+				}
+
+			}
+		}
+
+		stage('Push Docker Image') {
+			steps {
+				script {
+					docker.withRegistry('', 'dockerhub') {
+						dockerImage.push();
+						dockerImage.push('latest');
+					}
+				}
+			}
+		}
+	} 
+	
+	post {
+		always {
+			echo 'Im awesome. I run always'
+		}
+		success {
+			echo 'I run when you are successful'
+		}
+		failure {
+			echo 'I run when you fail'
+		}
+	}
 }
