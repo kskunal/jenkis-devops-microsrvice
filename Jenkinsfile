@@ -48,9 +48,12 @@ pipeline{
             }
         }
         stage('Push Docker Image'){
-            script{
-                docker.withRegistry('','DockerHubID'){
-                    dockerImage.push('latest')
+            steps{
+
+                script{
+                        docker.withRegistry('','DockerHubID'){
+                        dockerImage.push('latest')
+                        }
                 }
             }
         }
