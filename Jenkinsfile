@@ -31,25 +31,33 @@ pipeline {
 		}
 		stage('Compile') {
 			steps {
-				'mvn clean compile'
+				script {
+					'mvn clean compile'
+				}
 			}
 		}
 
 		stage('Test') {
 			steps {
-				'mvn test'
+				script {
+					'mvn test'
+				}
 			}
 		}
 
 		stage('Integration Test') {
 			steps {
-				'mvn failsafe:integration-test failsafe:verify'
+				script {
+					'mvn failsafe:integration-test failsafe:verify'
+				}
 			}
 		}
 
 		stage('Package') {
 			steps {
-				'mvn package -DskipTests'
+				script {
+					'mvn package -DskipTests'
+				}
 			}
 		}
 
