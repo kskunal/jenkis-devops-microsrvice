@@ -55,6 +55,14 @@ pipeline {
 				sh "docker build -t ksauto/currency-exchange-devops:${env.BUILD_TAG} ."
 			}
 		}
+		stage('Push Docker Image'){
+			steps{
+			withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerpassword', usernameVariable: 'dockerusername')]) {
+				sh "docker login -u ${env.dockerusername} -p ${env.dockerpassword}
+				sh "docker push ksauto/currency-exchange-devops:${env.BUILD_TAG}"
+				}
+			}
+		}
 	} 
 	
 	post {
