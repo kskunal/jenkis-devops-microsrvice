@@ -52,7 +52,7 @@ pipeline {
 		}
 		stage('Built Docker Image'){
 			steps {
-				sh "docker build -t ksauto/currency-exchange-devops:${env.BUILD_TAG}" ."
+				sh "docker build -t ksauto/currency-exchange-devops:${env.BUILD_TAG} ."
 			}
 		}
 	} 
